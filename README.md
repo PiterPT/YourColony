@@ -1,162 +1,106 @@
-# Prompt — YourColony: Império dos Insetos
+# YourColony: Império dos Insetos
 
-## Role
-
-Act as a Senior Front-End Game Engineer specialized in browser-based strategy games, simulation systems, emergent AI, resource management and colony simulation.
+> **Visão Geral:** *YourColony* é um simulador de estratégia e evolução focado no ecossistema e organização social dos insetos. O jogador começa com um formigueiro primitivo, gere recursos biológicos e desbloqueia ramificações evolutivas para fundar colónias de outros insetos (abelhas, térmitas, vespas e besouros), construindo um super-império subterrâneo e aéreo.
 
 ---
 
-## Context
+## 1. Visão e Proposta de Valor
 
-- **Project Name:** YourColony — Império dos Insetos
-- **Platform:** Web Browser / Desktop
-- **Tech Stack:** HTML5, CSS3, Vanilla JavaScript ES6+
-- **Rendering:** HTML5 Canvas 2D
-- **Architecture:** Modular JavaScript, data-driven game systems, separation between simulation, rendering, input and UI
-- **External Dependencies:** Zero
-- **Frameworks:** None
-- **Game Engine:** None
-- **Persistence:** localStorage
-- **Language:** Portuguese (Portugal)
-- **Visual Direction:** dark underground ant-farm aesthetic, organic biological shapes, earthy colors, subtle animations and readable strategy-game UI
-- **Performance Target:** stable gameplay with hundreds of simulated insects
-- **Browser Compatibility:** modern Chrome, Firefox, Edge and Safari
-
-### Security Constraints
-
-- No external network requests.
-- No `eval()`.
-- No dynamic script injection.
-- No arbitrary HTML injection.
-- Validate all `localStorage` data before loading it.
-- Use `textContent` instead of `innerHTML` for dynamic game data.
-- Do not trust persisted state.
-- Avoid unnecessary global variables.
-
-### Code Quality
-
-- Use strict JavaScript practices.
-- Use descriptive naming.
-- Avoid unnecessary abstractions.
-- Avoid premature optimization.
-- Keep systems modular.
-- Keep simulation state independent from DOM state.
-- Prefer composition and small systems.
-- Use classes only where they genuinely improve the architecture.
+* **Género:** Simulação de Colónia / Estratégia em Tempo Real / Árvore Evolutiva.
+* **Inspirações:** *Empires of the Undergrowth*, *SimAnt*, *Spore* (fase criatura/tribo) e *Oxygen Not Included*.
+* **Conceito Diferenciador:** O jogador não gere pessoas, mas sim feromonas, castas biológicas e redes de comunicação naturais. O progresso não é tecnológico no sentido mecânico, mas sim **genético e adaptativo**.
 
 ---
 
-# Objective
+## 2. Tipos de Colónias e Progressão de Espécies
 
-Create a **complete, playable browser game MVP** based on the concept of **YourColony — Império dos Insetos**.
+O jogador começa com uma espécie base e, à medida que recolhe biomassa e DNA, expande o controlo sobre outras espécies com dinâmicas de jogo distintas:
 
-The game is a colony simulation and real-time strategy game about insects, evolution and biological organization.
+```
+[Formigas Subterrâneas] (Início)
+       │
+       ├───> [Térmitas] (Engenharia de fungos e celulose)
+       │
+       ├───> [Abelhas] (Voo, polinização e gestão vertical/arbórea)
+       │
+       └───> [Predadores Especializados] (Vespas carnívoras, Louva-a-deus mercenários)
+```
 
-The player starts with a primitive underground ant colony and must manage:
+### 2.1. Formigueiro (A Fundação)
+* **Ambiente:** Subterrâneo profundo e solo superficial.
+* **Castas:** Obreiras, Soldados, Escavadoras, Ama-secas e Rainha.
+* **Foco:** Túneis modulares, transporte em fila guiado por feromonas, estocagem de sementes e controlo térmico de câmaras de ovos.
 
-- Biomass / Protein
-- Sugars / Carbohydrates
-- Structural Materials
-- Water / Humidity
-- Temperature
-- Population
-- Queen health
-- Reproduction
-- Pheromone networks
-- Territory
+### 2.2. Colmeia de Abelhas (Expansão Aérea)
+* **Ambiente:** Troncos de árvores, ramos altos e flores.
+* **Castas:** Forrageiras aéreas, Construtoras de cera, Guardiãs e Zangões.
+* **Foco:** Navegação tridimensional, rota de vento e clima, recolha de néctar/pólen e produção de mel.
 
-The long-term objective is to evolve from a primitive ant colony into a biological empire capable of controlling multiple insect species.
-
----
-
-# Core Game Fantasy
-
-The player should **NOT directly control individual insects**.
-
-Instead, the player controls the colony through:
-
-- Pheromone trails
-- Construction priorities
-- Resource priorities
-- Caste allocation
-- Evolutionary adaptations
-- Territory management
-
-The insects should appear to make decisions autonomously based on colony priorities and environmental conditions.
-
-The game should feel like a **colony simulation**, not a traditional RTS.
-
-The player gives strategic instructions.
-
-The colony executes them autonomously.
+### 2.3. Termiteiro (Mestres da Construção)
+* **Ambiente:** Montes de terra e madeira morta.
+* **Foco:** Climatização passiva (torres de ventilação complexas) e cultivo industrial de fungos a partir de madeira.
 
 ---
 
-# MVP Scope
+## 3. Mecânicas Principais (Core Loops)
 
-The first playable version must focus exclusively on the **Ant Colony**.
+### 3.1. Gestão por Trilhas de Feromonas
+* Em vez de controlo individual direto por unidade, o jogador desenha **rotas de feromonas**:
+  * *Feromona de Forrageamento:* Atrai obreiras para recolha de recursos.
+  * *Feromona de Alarme/Ataque:* Mobiliza soldados para repelir invasores.
+  * *Feromona de Construção/Escavação:* Define áreas prioritárias de escavação e selagem de túneis.
 
-Do not attempt to fully implement Bees, Termites or Wasps in the MVP.
+### 3.2. Ciclo de Recursos Biológicos
+* **Biomassa / Proteína:** Essencial para alimentar a Rainha e botar novos ovos.
+* **Açúcares / Carboidratos:** Néctar, melada de pulgões e seiva para manter a estamina da colónia ativa.
+* **Materiais Estruturais:** Terra compactada, pedrinhas, resina vegetal e cera.
+* **Humidade e Temperatura:** Parâmetros críticos para a eclosão saudável de ovos e crescimento de fungos benéficos.
 
-However, the architecture must make it possible to add them later without rewriting the core simulation.
-
-The MVP must include:
-
-1. Underground destructible grid.
-2. Ant colony.
-3. Queen.
-4. Worker ants.
-5. Soldier ants.
-6. Eggs → larvae → pupae → workers lifecycle.
-7. Food/resource nodes on the surface.
-8. Resource transportation.
-9. Pheromone trails.
-10. Basic construction and excavation.
-11. Basic predators.
-12. Colony population management.
-13. Temperature simulation.
-14. Humidity simulation.
-15. Basic evolution tree.
-16. Day/night cycle.
-17. Pause/resume.
-18. Game speed controls.
-19. Save/load using `localStorage`.
-20. Victory condition.
-21. Defeat condition.
-22. Responsive game UI.
+### 3.3. Árvore de Evolução e Genética (Evo-Tree)
+A evolução substitui as pesquisas tecnológicas clássicas:
+* **Adaptações Físicas:** Mandíbulas mais resistentes, ferrões venenosos, asas reforçadas, carapaças blindadas de quitina.
+* **Simbioses Naturais:**
+  * Domesticação de **Pulgões** (pastoreio para recolha contínua de melada).
+  * Simbiose com **Fungos** em câmaras dedicadas.
+* **Comportamento Social:** Feromonas de longo alcance, castas gigantes (*Super-majors*), divisão de tarefas aprimorada.
 
 ---
 
-# Game View
+## 4. Ameaças e Dinâmica do Mundo
 
-Use a Canvas-based **ant-farm side/cutaway perspective**.
+* **Predadores Naturais:** Aranhas, aves, sapos, centopeias gigantes e lagartos.
+* **Colónias Rivais:** Guerras territoriais contra outros formigueiros por fontes de alimento abundantes.
+* **Clima e Intempéries:**
+  * **Chuvas Torrenciais:** Risco de inundação de galerias subterrâneas (necessidade de drenagem e barreiras).
+  * **Ondas de Calor:** Ressecamento de larvas.
+  * **Inverno / Queda de Temperatura:** Necessidade de agrupar a colónia em torno da rainha e entrar em dormência controlada.
 
-The interface should contain:
+---
 
-- Main simulation canvas
-- Top resource bar
-- Colony population indicator
-- Queen health indicator
-- Current day/time
-- Game speed controls
-- Pause button
-- Build menu
-- Pheromone tools
-- Evolution button
-- Event/notification panel
-- Selected entity information panel
+## 5. Arquitetura e Estrutura Técnica
 
-Suggested layout:
+| Componente | Opção Recomendada | Justificação |
+| :--- | :--- | :--- |
+| **Engine** | Godot 4 ou Unity | Excelente suporte para simulação de milhares de agentes 2D/3D isométricos |
+| **Simulação de Multidões** | *Flow Fields* + Algoritmos de Feromonas | Permite gerir centenas ou milhares de insetos sem perda severa de framerate |
+| **Terreno** | Sistema de grelha destrutível (*Tile-based* / Celular) | Essencial para escavação livre e dinâmica de túneis |
+| **Visual** | Perspectiva isométrica ou corte lateral (*Ant-farm view*) | Facilita a visualização do interior das galerias e do mundo exterior |
 
-```text
-┌──────────────────────────────────────────────────────┐
-│ Resources │ Population │ Queen │ Day │ Speed │ Pause │
-├──────────────────────────────────────────────────────┤
-│                                                      │
-│                                                      │
-│                  GAME CANVAS                         │
-│                                                      │
-│                                                      │
-├──────────────────────────────────────────────────────┤
-│ Build │ Pheromones │ Evolution │ Colony Information │
-└──────────────────────────────────────────────────────┘
+---
+
+## 6. Roadmap Inicial (Do Protótipo à Expansão)
+
+### Fase 1: O Formigueiro Básico (MVP)
+- [ ] Grelha subterrânea escavável com corte lateral (*Ant-farm*).
+- [ ] Ciclo de vida da Rainha: botar ovos $\rightarrow$ larva $\rightarrow$ pupa $\rightarrow$ formiga obreira.
+- [ ] Movimento baseado em feromonas básicas (ir buscar comida e regressar ao ninho).
+
+### Fase 2: Defesa e Ecossistema
+- [ ] Adição da casta dos Soldados e combate contra predadores (ex.: escaravelhos e aranhas).
+- [ ] Sistema de pastoreio de pulgões para produção passiva de açúcar.
+- [ ] Efeitos de água/humidade nas câmaras.
+
+### Fase 3: A Árvore Evolutiva e Novas Espécies
+- [ ] Desbloqueio da colmeia de Abelhas e mecânicas de voo à superfície.
+- [ ] Mutações genéticas (veneno, carapaça, ferrão).
+- [ ] Relação entre espécies (comércio ou guerra entre o formigueiro e a colmeia).
