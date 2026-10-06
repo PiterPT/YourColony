@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YourColony — Império dos Insetos</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Top Resource & Status Bar -->
+    <header id="top-bar">
+      <div class="stat-group">
+        <span class="stat-label">Biomassa:</span>
+        <span id="res-biomass" class="stat-val">0</span>
+        <span class="stat-label">Açúcar:</span>
+        <span id="res-sugar" class="stat-val">0</span>
+        <span class="stat-label">Material:</span>
+        <span id="res-material" class="stat-val">0</span>
+        <span class="stat-label">Água:</span>
+        <span id="res-water" class="stat-val">0</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-label">Formigas:</span>
+        <span id="stat-pop" class="stat-val">0</span>
+        <span class="stat-label">Rainha:</span>
+        <div class="meter-bar"><div id="queen-hp-fill" class="meter-fill"></div></div>
+      </div>
+      <div class="stat-group">
+        <span class="stat-label">Dia:</span>
+        <span id="stat-day" class="stat-val">1</span>
+        <span class="stat-label">Hora:</span>
+        <span id="stat-time" class="stat-val">08:00</span>
+        <span class="stat-label">Clima:</span>
+        <span id="stat-weather" class="stat-val">Seco</span>
+      </div>
+      <div class="ctrl-group">
+        <button id="btn-pause" class="btn-ctrl" aria-label="Pausar Jogo">⏸</button>
+        <button id="btn-speed-1" class="btn-ctrl active" aria-label="Velocidade Normal">1x</button>
+        <button id="btn-speed-2" class="btn-ctrl" aria-label="Velocidade Dobrada">2x</button>
+        <button id="btn-speed-4" class="btn-ctrl" aria-label="Velocidade Quádrupla">4x</button>
+        <button id="btn-save" class="btn-ctrl" aria-label="Guardar Jogo">💾 Guardar</button>
+      </div>
+    </header>
+
+    <!-- Main Game Canvas -->
+    <main id="viewport-container">
+      <canvas id="game-canvas"></canvas>
+      <div id="notifications-overlay"></div>
+    </main>
+
+    <!-- Bottom Controls & Toolbars -->
+    <footer id="bottom-bar">
+      <div class="tool-section">
+        <span class="section-title">Ações / Escavação:</span>
+        <button id="tool-select" class="btn-tool active">Examinar</button>
+        <button id="tool-dig" class="btn-tool">Escavar Solo (Custo: 1 Mat)</button>
+        <button id="tool-chamber-food" class="btn-tool">Armazém Alimentos</button>
+        <button id="tool-chamber-nursery" class="btn-tool">Berçário Real</button>
+      </div>
+      <div class="tool-section">
+        <span class="section-title">Feromonas:</span>
+        <button id="tool-phero-forage" class="btn-tool phero-forage">Forragem (F)</button>
+        <button id="tool-phero-alarm" class="btn-tool phero-alarm">Alarme (A)</button>
+        <button id="tool-phero-build" class="btn-tool phero-build">Trabalho (C)</button>
+        <button id="tool-phero-clear" class="btn-tool">Limpar Feromonas</button>
+      </div>
+      <div class="tool-section">
+        <button id="btn-toggle-evolution" class="btn-action">🧬 Evolução (E)</button>
+        <button id="btn-toggle-colony" class="btn-action">📊 Colónia</button>
+      </div>
+    </footer>
+
+    <!-- Evolution Panel Modal -->
+    <section id="modal-evolution" class="modal-panel hidden" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Árvore de Adaptação Biológica</h2>
+          <button id="btn-close-evolution" class="btn-close">×</button>
+        </div>
+        <div id="evolution-tree-grid" class="evolution-tree"></div>
+      </div>
+    </section>
+
+    <!-- Colony Management Modal -->
+    <section id="modal-colony" class="modal-panel hidden" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Gestão e Demografia da Colónia</h2>
+          <button id="btn-close-colony" class="btn-close">×</button>
+        </div>
+        <div class="colony-summary">
+          <p>Obreiras: <strong id="cnt-workers">0</strong> | Soldados: <strong id="cnt-soldiers">0</strong></p>
+          <p>Ovos: <strong id="cnt-eggs">0</strong> | Larvas: <strong id="cnt-larvae">0</strong> | Pupas: <strong id="cnt-pupae">0</strong></p>
+          <hr class="separator">
+          <h3>Prioridades de Trabalho das Obreiras</h3>
+          <div class="priority-slider-row">
+            <label for="prio-food">Alimento & Forragem:</label>
+            <input type="range" id="prio-food" min="1" max="5" value="3">
+            <span id="val-prio-food">3</span>
+          </div>
+          <div class="priority-slider-row">
+            <label for="prio-dig">Construção & Escavação:</label>
+            <input type="range" id="prio-dig" min="1" max="5" value="3">
+            <span id="val-prio-dig">3</span>
+          </div>
+          <div class="priority-slider-row">
+            <label for="prio-care">Cuidados com a Ninhada:</label>
+            <input type="range" id="prio-care" min="1" max="5" value="3">
+            <span id="val-prio-care">3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Panel / Inspection Drawer -->
+    <aside id="info-drawer" class="info-drawer hidden">
+      <div class="drawer-header">
+        <h3 id="info-title">Inspeção</h3>
+        <button id="btn-close-drawer" class="btn-close">×</button>
+      </div>
+      <div id="info-body">Nenhum alvo selecionado.</div>
+    </aside>
+
+    <!-- Game Over / Victory Modal -->
+    <section id="modal-gameover" class="modal-panel hidden" aria-hidden="true">
+      <div class="modal-content text-center">
+        <h2 id="endgame-title">Fim de Jogo</h2>
+        <p id="endgame-desc"></p>
+        <button id="btn-restart" class="btn-action">Reiniciar Colónia</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript Modules in Order -->
+  <script src="js/config.js"></script>
+  <script src="js/core/eventBus.js"></script>
+  <script src="js/core/gameState.js"></script>
+  <script src="js/core/gameLoop.js"></script>
+  <script src="js/world/grid.js"></script>
+  <script src="js/world/pathfinding.js"></script>
+  <script src="js/world/worldGenerator.js"></script>
+  <script src="js/entities/ant.js"></script>
+  <script src="js/entities/queen.js"></script>
+  <script src="js/entities/predator.js"></script>
+  <script src="js/systems/pheromoneSystem.js"></script>
+  <script src="js/systems/resourceSystem.js"></script>
+  <script src="js/systems/environmentSystem.js"></script>
+  <script src="js/systems/reproductionSystem.js"></script>
+  <script src="js/systems/combatSystem.js"></script>
+  <script src="js/systems/evolutionSystem.js"></script>
+  <script src="js/systems/saveSystem.js"></script>
+  <script src="js/rendering/camera.js"></script>
+  <script src="js/rendering/renderer.js"></script>
+  <script src="js/ui/hud.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
